@@ -30,10 +30,5 @@ if __name__ == "__main__":
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([input_url])
 
-            #ciulator.sh
-            # 
-            # 
-            # 
-
 
         
