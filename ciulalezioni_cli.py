@@ -5,7 +5,7 @@ if __name__ == "__main__":
     argc = len(sys.argv)-1
 
     if not(argc in (0, 2, 3)):
-        print("Incorrect number of arguments - usage: ciulalezioni_cli [INPUT_URL PATH_TO_COOKIES [OUTPUT_DIRECTORY]]")
+        print("Incorrect number of arguments - usage: ciulalezioni_cli.py [INPUT_URL PATH_TO_COOKIES [OUTPUT_DIRECTORY]]")
     else:
         input_url = (sys.argv[1] if (argc != 0) else input("Input url >>"))
         cookies_path = (sys.argv[2] if (argc != 0) else input("Path to cookies file >>"))
