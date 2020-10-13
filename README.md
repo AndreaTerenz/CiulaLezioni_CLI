@@ -4,7 +4,7 @@ Like [CiulaLezioni](https://github.com/AndreaTerenz/CiulaLezioni), but it's from
 
 ## Usage
 
-`ciulalezioni_cli.py [INPUT_URL PATH_TO_COOKIES [OUTPUT_DIRECTORY]]`
+`python ciulalezioni_cli.py [INPUT_URL PATH_TO_COOKIES [OUTPUT_DIRECTORY]]`
 
 If no argument is specified, the program will prompt you to input the needed information, where:
 
