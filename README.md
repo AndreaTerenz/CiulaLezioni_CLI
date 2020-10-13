@@ -1,6 +1,6 @@
 # CiulaLezioni_CLI
 
-Like CiulaLezioni, but it's from the command line
+Like [CiulaLezioni](https://github.com/AndreaTerenz/CiulaLezioni), but it's from the command line
 
 ## Usage
 
