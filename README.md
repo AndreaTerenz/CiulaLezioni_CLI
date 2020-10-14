@@ -4,13 +4,27 @@ Like [CiulaLezioni](https://github.com/AndreaTerenz/CiulaLezioni), but it's from
 
 ## Usage
 
-`python ciulalezioni_cli.py [INPUT_URL PATH_TO_COOKIES [OUTPUT_DIRECTORY]]`
+From `ciulalezioni_cli.py -h`:
 
-If no argument is specified, the program will prompt you to input the needed information, where:
+```
+usage: ciulalezioni_cli.py [-h] [-o DIR] cookies urls [urls ...]
 
-1. `INPUT_URL` is the URL of the video to download
-2. `PATH_TO_COOKIES` is the path to a txt file containing the cookies (in Netscape format) of the webpage the video belongs to
-3. `OUTPUT_DIRECTORY` specifies the directory in which to download the video
+wrapper for youtube dl to easily "steal" lectures from
+my teachers' GDrive
+
+positional arguments:
+  cookies               Path to cookies txt file
+  urls                  Url of each video to be
+                        downloaded
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -o DIR, --out_dir DIR
+                        directory to download the videos in
+
+note that without any arguments the program will ask for
+them via prompt
+```
 
 ## Intalling required modules
 
