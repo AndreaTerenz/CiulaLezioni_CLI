@@ -1,11 +1,17 @@
 import sys, os
 import youtube_dl
+import argparse
 from urllib.parse import urlparse
 
-def check_url(url:str):
+def check_url(url:str, log=False):
     if (url.strip() != ""):
         res = urlparse(url)
-        return (res.scheme != "" and res.netloc != "")
+        valid = (res.scheme != "" and res.netloc != "")
+
+        if log and not valid:
+            print("Invalid url:" + url)
+
+        return valid
 
     return False
 
@@ -54,7 +60,7 @@ def download(url:str, cookies:str, out_dir:str):
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
 
-def read_arg_from_cli(arg_pos:int, check_fun:function, err_msg:str):
+def read_arg_from_cli(arg_pos:int, check_fun, err_msg:str):
     if check_fun(sys.argv[arg_pos]):
         return sys.argv[arg_pos]
     else:
@@ -62,9 +68,56 @@ def read_arg_from_cli(arg_pos:int, check_fun:function, err_msg:str):
         sys.exit(-1)
 
 if __name__ == "__main__":
-    argc = len(sys.argv)-1
+    input_url = ""
+    cookies_path = ""
+    out_dir = ""
 
-    if not(argc in (0, 2, 3)):
+    if (sys.argv.count == 0):
+        input_url, cookies_path, out_dir = get_args_from_usr()
+    else:
+        parser = argparse.ArgumentParser(description='wrapper for youtube dl to easily "steal" lectures from my teachers\' GDrive',
+                                         usage="%(prog)s [-h] [[-o DIR] cookies url [url ...]]")
+
+        COOKIES_ARG = "cookies"
+        URLS_ARG = "urls"
+        OUT_DIR_ARG = "out_dir"
+
+        parser.add_argument(COOKIES_ARG, nargs=1, type=str, help="Path to cookies txt file")
+        parser.add_argument(URLS_ARG, type=str, nargs="+", help="Url of each video to be downloaded")
+
+        parser.add_argument("-o", "--"+OUT_DIR_ARG, nargs=1, default="", metavar="DIR",
+                            type=str, help="directory to download the videos in")
+
+        args = parser.parse_args()
+
+        print(vars(args)[URLS_ARG])
+        print(vars(args)[COOKIES_ARG])
+        print(vars(args)[OUT_DIR_ARG])
+
+        if not(check_cookies_file(vars(args)[COOKIES_ARG][0])):
+            print("Cookies file is non existent or not a .txt file")
+            sys.exit(-1)
+        
+        cookies_path = vars(args)[COOKIES_ARG]
+        out_dir = vars(args)[OUT_DIR_ARG]
+        
+        urls = list(filter(lambda u: check_url(u, log=True), vars(args)[URLS_ARG]))
+
+        if len(urls) == 0:
+            print("No valid urls were provided")
+            sys.exit(-1)
+        
+        for i in range(0, len(urls)):
+            u = urls[i]
+
+            
+
+    #download(input_url, cookies_path, out_dir)
+
+    """
+        argc = len(sys.argv)-1
+
+    if argc == 1:
         print("Incorrect number of arguments - usage: ciulalezioni_cli.py [INPUT_URL PATH_TO_COOKIES [OUTPUT_DIRECTORY]]")
     else:
         input_url = ""
@@ -74,11 +127,16 @@ if __name__ == "__main__":
         if (argc == 0):
             input_url, cookies_path, out_dir = get_args_from_usr()
         else:
+            
+            COOKIES_ARG_POS = 2
+            OUT_DIR_ARG_POS = 3
+
             input_url = read_arg_from_cli(1, check_url, "Invalid input url")
-            cookies_path = read_arg_from_cli(2, check_cookies_file, "Cookies file is non existent or not a .txt file")
+            cookies_path = read_arg_from_cli(COOKIES_ARG_POS, check_cookies_file, "Cookies file is non existent or not a .txt file")
 
             if argc == 3:
-                out_dir = sys.argv[3]
+                out_dir = sys.argv[COOKIES_ARG_POS]
 
         download(input_url, cookies_path, out_dir)
+    """
 
