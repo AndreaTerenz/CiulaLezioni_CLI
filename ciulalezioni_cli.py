@@ -21,15 +21,27 @@ def check_cookies_file(f:str):
 
     return False
 
-def get_input_url():
-    output = ""
-
-    while not check_url(output):
-        output = input("Input url >>")
-
-        if not(check_url(output)):
-            print("\tInvalid url - please try again")
+def get_input_urls():
+    output = []
     
+    i = 0
+    exit = False
+
+    while not exit:
+        u = ""
+
+        while not(check_url(u)) and not exit:
+            prompt = f"Input url {i}>>" if i == 0 else f"Input url {i} (ENTER to stop)>>"
+            u = input(prompt)
+            exit = (u == "")
+
+            if not(check_url(u)) and not exit:
+                print("\tInvalid url - please try again")
+        
+        if not exit:
+            i += 1
+            output.append(u)
+        
     return output
 
 def get_cookies_file():
@@ -44,7 +56,7 @@ def get_cookies_file():
     return output
 
 def get_args_from_usr():
-    return get_input_url(), get_cookies_file(), input("Insert path to output directory (ENTER to use current directory) >>")
+    return get_input_urls(), get_cookies_file(), input("Insert path to output directory (ENTER to use current directory) >>")
 
 def download(url:str, cookies:str, out_dir:str):
     if not(out_dir.endswith(os.path.sep)) and (len(out_dir) > 0):
@@ -68,15 +80,15 @@ def read_arg_from_cli(arg_pos:int, check_fun, err_msg:str):
         sys.exit(-1)
 
 if __name__ == "__main__":
-    input_url = ""
+    input_urls = []
     cookies_path = ""
     out_dir = ""
 
-    if (sys.argv.count == 0):
-        input_url, cookies_path, out_dir = get_args_from_usr()
+    if (len(sys.argv) - 1 == 0):
+        input_urls, cookies_path, out_dir = get_args_from_usr()
     else:
         parser = argparse.ArgumentParser(description='wrapper for youtube dl to easily "steal" lectures from my teachers\' GDrive',
-                                         usage="%(prog)s [-h] [[-o DIR] cookies url [url ...]]")
+                                         epilog='note that without any arguments the program will ask for them via prompt')
 
         COOKIES_ARG = "cookies"
         URLS_ARG = "urls"
@@ -90,53 +102,23 @@ if __name__ == "__main__":
 
         args = parser.parse_args()
 
-        print(vars(args)[URLS_ARG])
-        print(vars(args)[COOKIES_ARG])
-        print(vars(args)[OUT_DIR_ARG])
-
         if not(check_cookies_file(vars(args)[COOKIES_ARG][0])):
             print("Cookies file is non existent or not a .txt file")
             sys.exit(-1)
         
-        cookies_path = vars(args)[COOKIES_ARG]
-        out_dir = vars(args)[OUT_DIR_ARG]
+        cookies_path = vars(args)[COOKIES_ARG][0]
+        out_dir = vars(args)[OUT_DIR_ARG][0]
         
-        urls = list(filter(lambda u: check_url(u, log=True), vars(args)[URLS_ARG]))
+        input_urls = list(filter(lambda u: check_url(u, log=True), vars(args)[URLS_ARG]))
 
-        if len(urls) == 0:
+        if len(input_urls) == 0:
             print("No valid urls were provided")
             sys.exit(-1)
         
-        for i in range(0, len(urls)):
-            u = urls[i]
+    for i in range(0, len(input_urls)):
+        u = input_urls[i]
 
-            
+        print(f"\n\n################ Downloading video {i+1} of {len(input_urls)}\n")
 
-    #download(input_url, cookies_path, out_dir)
-
-    """
-        argc = len(sys.argv)-1
-
-    if argc == 1:
-        print("Incorrect number of arguments - usage: ciulalezioni_cli.py [INPUT_URL PATH_TO_COOKIES [OUTPUT_DIRECTORY]]")
-    else:
-        input_url = ""
-        cookies_path = ""
-        out_dir = ""
-
-        if (argc == 0):
-            input_url, cookies_path, out_dir = get_args_from_usr()
-        else:
-            
-            COOKIES_ARG_POS = 2
-            OUT_DIR_ARG_POS = 3
-
-            input_url = read_arg_from_cli(1, check_url, "Invalid input url")
-            cookies_path = read_arg_from_cli(COOKIES_ARG_POS, check_cookies_file, "Cookies file is non existent or not a .txt file")
-
-            if argc == 3:
-                out_dir = sys.argv[COOKIES_ARG_POS]
-
-        download(input_url, cookies_path, out_dir)
-    """
+        download(u, cookies_path, out_dir)
 
