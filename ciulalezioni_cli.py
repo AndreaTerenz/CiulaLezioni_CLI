@@ -88,7 +88,7 @@ if __name__ == "__main__":
         input_urls, cookies_path, out_dir = get_args_from_usr()
     else:
         parser = argparse.ArgumentParser(description='wrapper for youtube dl to easily "steal" lectures from my teachers\' GDrive',
-                                         epilog='note that without any arguments the program will ask for them via prompt')
+                                         epilog='note that without any arguments the program will ask for them via stdin')
 
         COOKIES_ARG = "cookies"
         URLS_ARG = "urls"
