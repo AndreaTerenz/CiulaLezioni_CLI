@@ -118,7 +118,7 @@ if __name__ == "__main__":
     for i in range(0, len(input_urls)):
         u = input_urls[i]
 
-        print(f"\n\n################ Downloading video {i+1} of {len(input_urls)}\n")
-
+        print(f"################ Downloading video {i+1} of {len(input_urls)}\n")
         download(u, cookies_path, out_dir)
+        print("\n")
 
