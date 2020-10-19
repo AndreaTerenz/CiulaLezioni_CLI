@@ -4,7 +4,7 @@ import argparse
 from urllib.parse import urlparse
 
 COOKIES_ARG = "cookies"
-URLS_LIST_ARG = "urls"
+URLS_LIST_ARG = "urls_list"
 URLS_FILE_ARG = "urls_file"
 OUT_DIR_ARG = "out_dir"
 
@@ -74,8 +74,10 @@ def parse_args_from_cli():
     main_grp.add_argument("-c", "--"+COOKIES_ARG, required=True, nargs=1, type=str, help="Path to cookies txt file")
 
     group = main_grp.add_mutually_exclusive_group(required=True)
-    group.add_argument("-u", "--"+URLS_LIST_ARG, type=str, nargs="+", help="Url of each video to be downloaded")
-    group.add_argument("-f", "--"+URLS_FILE_ARG, type=str, nargs=1, help="Path to txt file containing the urls of the video to download")
+    group.add_argument("-l", "--"+URLS_LIST_ARG, type=str, nargs="+", metavar="URL",
+                        help="Url of each video to be downloaded")
+    group.add_argument("-f", "--"+URLS_FILE_ARG, type=str, nargs=1,
+                        help="Path to txt file containing the videos' urls")
 
     args = vars(parser.parse_args())
 
